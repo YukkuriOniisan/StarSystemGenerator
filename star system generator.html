@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Display</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #555555;
+            color: #333;
+            display: flex;
+            /* justify-content: center; */
+			flex-direction: column; /* Arrange elements in a column */
+            align-items: center; /* Center items horizontally */
+        }
+		
+		.upperbox {
+		      display: flex;
+		}
+		
+		/* Style for the RNG Test Section */
+        .rng-test-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px; /* Space between RNG Test and Star Display */
+            text-align: center; /* Center align text in the RNG section */
+			margin: 10px
+        }
+
+        .rng-test-container h1 {
+            color: #555;
+            margin-top: 0;
+        }
+
+        .rng-test-container label {
+            display: block; /* Label on its own line */
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+		
+        .rng-test-container input[type="text"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%; /* Input to take full width of its container */
+            max-width: 200px; /* Limit input width */
+        }
+
+        .rng-test-container button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #5cb85c; /* Green button */
+            color: white;
+            cursor: pointer;
+        }
+
+        .rng-test-container button:hover {
+            background-color: #4cae4c;
+        }
+
+        .rng-test-container div {
+            margin-top: 10px;
+            font-weight: normal; /* Resetting font-weight if body has bold */
+        }
+		
+		.option-container {
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px; /* Space between RNG Test and Star Display */
+            text-align: left; /* Center align text in the RNG section */
+			margin: 10px
+        }
+		
+		.option-container label {
+            display: inline-block; /* Make label inline */
+            margin-right: 5px; /* Add some space between label and checkbox */
+			font-weight: bold
+        }
+		
+        .container {
+            max-width: 960px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: grid; /* Use grid for layout */
+            grid-template-columns: 1fr; /* Single column by default */
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr; /* Two columns on wider screens */
+            }
+        }
+
+        .star-display, .star-characteristics {
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #eee; /* Light grey background for sections */
+        }
+
+        .star-display h2, .star-characteristics h2 {
+            color: #555;
+            margin-top: 0;
+        }
+
+        #star-container {
+            width: 100%;
+            height: 300px; /* Fixed height for star area */
+            background-color: #111; /* Dark background for star canvas */
+            border: 1px solid #555;
+            border-radius: 8px;
+            display: flex; /* Center the SVG if we add it dynamically */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style for definition list in characteristics */
+        .star-characteristics dl {
+            display: grid;
+            grid-template-columns: auto 1fr; /* Define columns for dt and dd */
+            row-gap: 10px;
+            column-gap: 15px;
+        }
+
+        .star-characteristics dt {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .star-characteristics dd {
+            margin: 0; /* Remove default dd margin */
+        }
+		
+		#manualSCInput {
+			display: none; /* Hide by default */
+		}
+    </style>
+</head>
+<body>
+	<script src="script.js"></script>
+	
+	<div class="upperbox">
+    <div class="rng-test-container">
+	<h1>Pseudo-RNG Test</h1>
+    <label for="userInput">Enter Text for Seed:</label>
+    <input type="text" id="userInput" placeholder="Enter text here" maxlength="30">
+    <button onclick="generateRNG()">Generate RNGs</button>
+    <div id="seedDisplay">Seed: </div>
+    <div id="rngDisplay">RNG Values: </div>
+	</div>
+	
+    
+	<div class="option-container">
+	<h3>Options</h3>
+	<label for="forceHabitable">Force Habitable Star</label>
+	<input type="checkbox" id="forceHabitable" name="forceHabitable"></input>
+	<div>(will only generate stars with earth like planet if checked)</div>
+	<br>
+	<label for="manualSCGeneration">Stellar Classification Toggle</label>
+	<input type="checkbox" id="manualSCGenerateCheckbox" name="manualSCGenerateCheckbox" onchange="toggleSCInput()">
+    <span id="manualSCGenerateLabel">Automatic</span>
+	<div>(choose the desired spectral classification on below)</div>
+	</div>
+	</div>
+	
+	
+	<div class="container">
+        <section class="star-display">
+            <h2>Star Visualization</h2>
+            <div id="star-container">
+                <p style="color: white; text-align: center;">Star will be generated here.</p>
+            </div>
+        </section>
+        <section class="star-characteristics">
+            <h2>Primary Star Characteristics</h2>
+	  <form>
+	  <div>
+		<label for="spectralClass">Spectral Classification:</label>
+		<label for="starSpectralLabel" id="starSpectralLabel">-</label>
+		<div id="manualSCInput">
+		<select id="spectralClass" name="spectralClass" style="width: 50px;">
+		  <option value="">-</option>
+		  <option value="O">O</option>
+		  <option value="B">B</option>
+		  <option value="A">A</option>
+		  <option value="F">F</option>
+		  <option value="G">G</option>
+		  <option value="K">K</option>
+		  <option value="M">M</option>
+		  <option value="M">L</option>
+		  <option value="M">T</option>
+		  <option value="M">Y</option>
+		  <option value="M">D</option>
+		  </select>
+		<select id="spectralNumber" name="spectralNumber" style="width: 50px;">
+		  <option value="">-</option>
+		  <option value="0">0</option>
+		  <option value="1">1</option>
+		  <option value="2">2</option>
+		  <option value="3">3</option>
+		  <option value="4">4</option>
+		  <option value="5">5</option>
+		  <option value="6">6</option>
+		  <option value="7">7</option>
+		  <option value="8">8</option>
+		  <option value="9">9</option>
+		  </select>
+		<select id="luminosityClass" name="luminosityClass" style="width: 50px;">
+		  <option value="">-</option>
+		  <option value="0">0</option>
+		  <option value="I">I</option>
+		  <option value="II">II</option>
+		  <option value="III">III</option>
+		  <option value="IV">IV</option>
+		  <option value="V">V</option>
+		  <option value="VI">VI</option>
+		  <option value="VII">VII</option>
+		  </select>
+		  <br>
+		  </div>
+	  </div>
+	  </form>
+			<button onclick="generatePrimaryStar()">Generate Primary Star</button>
+            <dl>
+                <dt>Name:</dt> <dd id="star-name"><input type="text" id="userInput" placeholder="Unknown" maxlength="30"></dd>
+                <dt>Mass:</dt> <dd id="star-mass">Unknown</dd>
+                <dt>Radius:</dt> <dd id="star-radius">Unknown</dd>
+                <dt>Temperature:</dt> <dd id="star-temperature">Unknown</dd>
+                <dt>Luminosity:</dt> <dd id="star-luminosity">Unknown</dd>
+                <dt>Age:</dt> <dd id="star-age">Unknown</dd>
+                </dl>
+        </section>
+    </div>
+</body>
+</html>
