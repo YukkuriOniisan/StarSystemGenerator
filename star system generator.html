@@ -158,18 +158,21 @@
     <div id="seedDisplay">Seed: </div>
     <div id="rngDisplay">RNG Values: </div>
 	</div>
-	
     
 	<div class="option-container">
 	<h3>Options</h3>
 	<label for="forceHabitable">Force Habitable Star</label>
-	<input type="checkbox" id="forceHabitable" name="forceHabitable"></input>
+    <input type="checkbox" id="forceHabitable" name="forceHabitable">
 	<div>(will only generate stars with earth like planet if checked)</div>
 	<br>
 	<label for="manualSCGeneration">Stellar Classification Toggle</label>
-	<input type="checkbox" id="manualSCGenerateCheckbox" name="manualSCGenerateCheckbox" onchange="toggleSCInput()">
+    <input type="checkbox" id="manualSCGenerateCheckbox" name="manualSCGenerateCheckbox" onchange="toggleSCInput()">
     <span id="manualSCGenerateLabel">Automatic</span>
 	<div>(choose the desired spectral classification on below)</div>
+	<label for="flatSubtype">Flat Stellar Number</label>
+    <input type="checkbox" id="flatSubtype" name="flatSubtype">
+    <div>will make stelar number to be flatter instead of realistic</div>
+    </div>
 	</div>
 	</div>
 	
@@ -197,10 +200,10 @@
 		  <option value="G">G</option>
 		  <option value="K">K</option>
 		  <option value="M">M</option>
-		  <option value="M">L</option>
-		  <option value="M">T</option>
-		  <option value="M">Y</option>
-		  <option value="M">D</option>
+		  <option value="L">L</option>
+		  <option value="T">T</option>
+		  <option value="Y">Y</option>
+		  <option value="D">D</option>
 		  </select>
 		<select id="spectralNumber" name="spectralNumber" style="width: 50px;">
 		  <option value="">-</option>
@@ -231,15 +234,46 @@
 	  </div>
 	  </form>
 			<button onclick="generatePrimaryStar()">Generate Primary Star</button>
+            <button onclick="generatePrimaryStarAlt()">Generate Primary Star Alt</button>
             <dl>
-                <dt>Name:</dt> <dd id="star-name"><input type="text" id="userInput" placeholder="Unknown" maxlength="30"></dd>
-                <dt>Mass:</dt> <dd id="star-mass">Unknown</dd>
-                <dt>Radius:</dt> <dd id="star-radius">Unknown</dd>
-                <dt>Temperature:</dt> <dd id="star-temperature">Unknown</dd>
-                <dt>Luminosity:</dt> <dd id="star-luminosity">Unknown</dd>
-                <dt>Age:</dt> <dd id="star-age">Unknown</dd>
-                </dl>
+                <dt>Name:</dt> 
+                <dd>
+                    <input type="checkbox" id="nameCheckbox" onchange="toggleInput('star-name-input')">
+                    <input type="text" id="star-name-input" placeholder="Unknown" maxlength="30" disabled>
+                </dd>
+                <dt>Mass:</dt> 
+                <dd>
+                    <input type="checkbox" id="massCheckbox" onchange="toggleInput('star-mass-input')">
+                    <input type="text" id="star-mass-input" placeholder="Unknown" disabled>
+                </dd>
+                <dt>Radius:</dt> 
+                <dd>
+                    <input type="checkbox" id="radiusCheckbox" onchange="toggleInput('star-radius-input')">
+                    <input type="text" id="star-radius-input" placeholder="Unknown" disabled>
+                </dd>
+                <dt>Temperature:</dt> 
+                <dd>
+                    <input type="checkbox" id="temperatureCheckbox" onchange="toggleInput('star-temperature-input')">
+                    <input type="text" id="star-temperature-input" placeholder="Unknown" disabled>
+                </dd>
+                <dt>Luminosity:</dt> 
+                <dd>
+                    <input type="checkbox" id="luminosityCheckbox" onchange="toggleInput('star-luminosity-input')">
+                    <input type="text" id="star-luminosity-input" placeholder="Unknown" disabled>
+                </dd>
+                <dt>Age:</dt> 
+                <dd>
+                    <input type="checkbox" id="ageCheckbox" onchange="toggleInput('star-age-input')">
+                    <input type="text" id="star-age-input" placeholder="Unknown" disabled>
+                </dd>
+            </dl>
         </section>
     </div>
+    <script>
+        function toggleInput(inputId) {
+            const input = document.getElementById(inputId);
+            input.disabled = !input.disabled;
+        }
+    </script>
 </body>
 </html>
